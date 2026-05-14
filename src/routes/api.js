@@ -1,20 +1,10 @@
 const express = require("express");
+const { router: healthRouter } = require("./api/health");
 
 const router = express.Router();
 
-function buildHealthResponse() {
-  return {
-    status: "ok",
-    service: "csp451-web-starter",
-    timestamp: new Date().toISOString(),
-  };
-}
-
-router.get("/health", (req, res) => {
-  res.json(buildHealthResponse());
-});
+router.use("/health", healthRouter);
 
 module.exports = {
   router,
-  buildHealthResponse,
 };
