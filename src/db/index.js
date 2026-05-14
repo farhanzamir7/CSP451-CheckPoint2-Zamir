@@ -8,6 +8,17 @@ const defaultConfig = {
 
 let activeConnection = null;
 
+const memoryStore = {
+  users: [
+    {
+      id: 1,
+      username: "student",
+      role: "learner",
+    },
+  ],
+  auditLog: [],
+};
+
 function readDatabaseConfig(env = process.env) {
   return {
     host: env.DB_HOST || defaultConfig.host,
@@ -38,6 +49,11 @@ function connect(env = process.env) {
     config: maskConfig(config),
   };
 
+  memoryStore.auditLog.push({
+    action: "connect",
+    createdAt: activeConnection.connectedAt,
+  });
+
   return activeConnection;
 }
 
@@ -49,9 +65,48 @@ function getConnection() {
   return activeConnection;
 }
 
+function query(collectionName) {
+  getConnection();
+
+  if (!Object.prototype.hasOwnProperty.call(memoryStore, collectionName)) {
+    return {
+      rows: [],
+      rowCount: 0,
+      error: `Unknown collection: ${collectionName}`,
+    };
+  }
+
+  const rows = memoryStore[collectionName];
+
+  return {
+    rows,
+    rowCount: rows.length,
+    error: null,
+  };
+}
+
+function insert(collectionName, record) {
+  getConnection();
+
+  if (!Object.prototype.hasOwnProperty.call(memoryStore, collectionName)) {
+    memoryStore[collectionName] = [];
+  }
+
+  const newRecord = {
+    id: memoryStore[collectionName].length + 1,
+    ...record,
+  };
+
+  memoryStore[collectionName].push(newRecord);
+
+  return newRecord;
+}
+
 module.exports = {
   connect,
   getConnection,
+  query,
+  insert,
   readDatabaseConfig,
   maskConfig,
 };
