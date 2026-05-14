@@ -55,7 +55,7 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  showMessage("Checking login...", "loading");
+  showMessage("Checking login credentials, please wait...", "loading");
 
   try {
     const result = await submitLogin(email, password);
