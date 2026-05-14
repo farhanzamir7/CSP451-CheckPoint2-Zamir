@@ -6,6 +6,8 @@ const defaultConfig = {
   password: "",
 };
 
+let activeConnection = null;
+
 function readDatabaseConfig(env = process.env) {
   return {
     host: env.DB_HOST || defaultConfig.host,
@@ -26,7 +28,30 @@ function maskConfig(config) {
   };
 }
 
+function connect(env = process.env) {
+  const config = readDatabaseConfig(env);
+
+  activeConnection = {
+    connected: true,
+    driver: "in-memory",
+    connectedAt: new Date().toISOString(),
+    config: maskConfig(config),
+  };
+
+  return activeConnection;
+}
+
+function getConnection() {
+  if (!activeConnection) {
+    return connect();
+  }
+
+  return activeConnection;
+}
+
 module.exports = {
+  connect,
+  getConnection,
   readDatabaseConfig,
   maskConfig,
 };
