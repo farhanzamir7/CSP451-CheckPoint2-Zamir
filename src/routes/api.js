@@ -2,14 +2,19 @@ const express = require("express");
 
 const router = express.Router();
 
-/**
- * Starter endpoint to prove the API works.
- * Feature branch: feature/api-endpoints should expand this structure:
- * - add route modules, controllers, and validation
- * - add at least one POST endpoint
- */
+function buildHealthResponse() {
+  return {
+    status: "ok",
+    service: "csp451-web-starter",
+    timestamp: new Date().toISOString(),
+  };
+}
+
 router.get("/health", (req, res) => {
-  res.json({ status: "ok", time: new Date().toISOString() });
+  res.json(buildHealthResponse());
 });
 
-module.exports = { router };
+module.exports = {
+  router,
+  buildHealthResponse,
+};
