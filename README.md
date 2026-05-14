@@ -1,5 +1,7 @@
 # CSP-451 Web Starter — CheckPoint 2
+## CheckPoint 2 Feature Summary
 
+This branch focuses on login validation and authentication routing.
 This repository is a **starter template** for practicing:
 - Git branching strategies (GitHub Flow / Git Flow-lite)
 - Pull Requests + review workflow
